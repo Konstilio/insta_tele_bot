@@ -3,11 +3,13 @@ import telebot
 import requests
 import urllib
 from flask import Flask, jsonify, request
+from instagram.client import InstagramAPI
 app = Flask(__name__)
 
 IS_OFFLINE = os.environ.get('IS_OFFLINE', 0)
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 CLIENT_ID = os.environ.get('CLIENT_ID')
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
 REDIRECT_URI = os.environ.get('REDIRECT_URI')
 print("BOT_TOKEN is " + BOT_TOKEN)
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -31,7 +33,9 @@ def hello():
 @app.route('/redirect')
 def redirect():
     code = request.args.get('code')
-    print("redirect request code: " + code)
+    tempApi = InstagramAPI(client_id = CLIENT_ID, client_secret = CLIENT_SECRET, redirect_uri = REDIRECT_URI)
+    access_token = tempApi.exchange_code_for_access_token(code)
+    print("Wow !!! " + access_token)
     return "Hello redirect!"
 
 @app.route("/{}".format(BOT_TOKEN), methods=["POST"])
