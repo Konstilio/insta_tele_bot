@@ -17,6 +17,12 @@ def Help(message):
 def hello():
     return "Hello world!"
 
+@app.route('/redirect')
+def redirect():
+    update = request.get_json()
+    print("redirect request: " + str(update))
+    return "Hello redirect!"
+
 @app.route("/{}".format(BOT_TOKEN), methods=["POST"])
 def bot_main():
     update = request.get_json()
