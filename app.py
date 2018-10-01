@@ -7,11 +7,15 @@ from instagram.client import InstagramAPI
 app = Flask(__name__)
 
 IS_OFFLINE = os.environ.get('IS_OFFLINE', 0)
+
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
-CLIENT_ID = os.environ.get('CLIENT_ID')
-CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-REDIRECT_URI = os.environ.get('REDIRECT_URI')
 print("BOT_TOKEN is " + BOT_TOKEN)
+CLIENT_ID = os.environ.get('CLIENT_ID')
+print("CLIENT_ID is " + CLIENT_ID)
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+print("CLIENT_SECRET is " + CLIENT_SECRET)
+REDIRECT_URI = os.environ.get('REDIRECT_URI')
+print("REDIRECT_URI is " + REDIRECT_URI)
 bot = telebot.TeleBot(BOT_TOKEN)
 
 @bot.message_handler(commands=['help'])
