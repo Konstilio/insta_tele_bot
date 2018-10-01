@@ -37,9 +37,10 @@ def hello():
 @app.route('/redirect')
 def redirect():
     code = request.args.get('code')
-    tempApi = InstagramAPI(client_id = CLIENT_ID, client_secret = CLIENT_SECRET, redirect_uri = REDIRECT_URI)
-    access_token = tempApi.exchange_code_for_access_token(code)
-    print("Wow !!! " + access_token)
+    payload = {'redirect_uri': REDIRECT_URI, 'client_id': CLIENT_ID, 'code': code\
+               , 'grant_type' : 'authorization_code'}
+    r = requests.post("https://api.instagram.com/oauth/access_token", data=payload)
+    print("Wow !!! " + r.json())
     return "Hello redirect!"
 
 @app.route("/{}".format(BOT_TOKEN), methods=["POST"])
