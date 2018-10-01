@@ -40,7 +40,7 @@ def redirect():
     payload = {'redirect_uri': REDIRECT_URI, 'client_id': CLIENT_ID, 'code': code\
                , 'client_secret' : CLIENT_SECRET,  'grant_type' : 'authorization_code'}
     r = requests.post("https://api.instagram.com/oauth/access_token", data=payload)
-    print("Wow !!! " + r.json())
+    print("Wow !!! " + str(r.json()))
     return "Hello redirect!"
 
 @app.route("/{}".format(BOT_TOKEN), methods=["POST"])
