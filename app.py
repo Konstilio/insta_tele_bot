@@ -15,16 +15,20 @@ REDIRECT_URI = os.environ.get('REDIRECT_URI')
 bot = telebot.TeleBot(BOT_TOKEN)
 instaAccess = InstaAccess()
 
+def onStart(chat_id):
+    payload = {'redirect_uri': REDIRECT_URI, 'client_id': CLIENT_ID \
+        , 'state': chat_id, 'response_type': "code"}
+    url = "https://api.instagram.com/oauth/authorize/?" + urllib.parse.urlencode(payload)
+    bot.send_message(chat_id, url)
+
+
 @bot.message_handler(commands=['help'])
 def Help(message):
     bot.send_message(message.chat.id, "Hi, I'm ready")
 
 @bot.message_handler(commands=['start'])
 def Start(message):
-    payload = {'redirect_uri' : REDIRECT_URI, 'client_id' : CLIENT_ID\
-               , 'state' : message.chat.id, 'response_type' : "code"}
-    url = "https://api.instagram.com/oauth/authorize/?" + urllib.parse.urlencode(payload)
-    bot.send_message(message.chat.id, url)
+    onStart(message.chat.id)
 
 @app.route('/')
 def hello():
@@ -47,7 +51,12 @@ def redirect():
 
     instaAccess.resetApi(access_token=access_token, client_secret=CLIENT_SECRET)
 
-    recent_media = instaAccess.getMediaRecent(count=1)
+    data, pagination = instaAccess.getMediaRecent(count=1)
+    dataEntry = data.getFirst()
+
+    if dataEntry is not None:
+        bot.send_photo(chat_id, dataEntry.images.standard_resolution.url)
+
     return "ok!", 200
 
 @app.route("/{}".format(BOT_TOKEN), methods=["POST"])

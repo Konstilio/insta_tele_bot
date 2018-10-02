@@ -1,5 +1,6 @@
 import requests
-from instaTools.meta import Meta
+from instaTools.instaResponses import Meta, Pagination, User, Images, DataEntry, Data
+from instaTools.instaExceptions import InstaException
 
 class InstaAccess:
     def __init__(self):
@@ -18,9 +19,19 @@ class InstaAccess:
         r = requests.get(url, params=result_payload)
 
         responseData = r.json()
-        print("getMediaRecent: " + str(responseData))
+        #print("getMediaRecent: " + str(responseData))
         meta = Meta.fromJson(responseData['meta'])
-        print("meta: " + str(meta))
+
+        #raise exception if needed
+        InstaException.raiseFromMeta(meta)
+        pagination = Pagination.fromJson(responseData['pagination'])
+
+        dataJSON = responseData['data']
+        data = Data.fromJson(dataJSON)
+
+        return data, pagination
+
+
 
 
 
